@@ -1,5 +1,8 @@
 /* =========================================================
-   UNPOSED MOMENTS — stylesheet (Updated Mobile Nav Layout)
+   UNPOSED MOMENTS — stylesheet
+   White background throughout. The logo's warm charcoal is
+   reserved for icons, eyebrows, buttons and small accents —
+   never as a page background.
    ========================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap');
@@ -532,12 +535,12 @@ p{ margin:0; }
 }
 
 @media (max-width:860px){
-  /* --- Right-Aligned Compact Floating Mobile Navigation --- */
+  /* --- Right Aligned & Fit Content Floating Dropdown Navigation for Mobile --- */
   .main-nav{
     position:absolute; 
     top:calc(100% + 8px); 
-    right:var(--gutter); 
     left:auto;
+    right:var(--gutter);
     transform:translateY(-10px);
     width:fit-content;
     min-width:180px;
@@ -545,7 +548,7 @@ p{ margin:0; }
     z-index:200;
     background:var(--white);
     border:1px solid var(--line);
-    border-radius:16px;
+    border-radius:12px;
     box-shadow:0 16px 36px rgba(32,30,26,.15);
     flex-direction:column; 
     align-items:flex-end;
@@ -579,9 +582,9 @@ p{ margin:0; }
   .nav-cta{ display:flex; align-items:center; gap:10px; }
   .nav-cta .btn.solid{ padding:9px 16px; font-size:.68rem; }
 
-  /* Featured Work dropdown / accordion right-aligned */
+  /* Featured Work dropdown layout - Column aligned (Arrow aligned vertically with text) */
   .nav-item-dropdown{
-    width:100%;
+    width:auto;
     border-bottom:none;
     display:flex;
     flex-direction:column;
@@ -589,11 +592,12 @@ p{ margin:0; }
   }
   .nav-item-dropdown-row{ 
     display:flex; 
-    align-items:center; 
-    justify-content:flex-end; 
-    gap:6px; 
+    flex-direction:column; 
+    align-items:flex-end; 
+    justify-content:center; 
+    gap:2px; 
     width:auto; 
-    padding:8px 0;
+    padding:6px 0;
   }
   .nav-item-dropdown .nav-parent-link{
     font-size:.85rem; 
@@ -604,7 +608,11 @@ p{ margin:0; }
     flex:initial;
     text-align:right;
   }
-  .caret-btn{ width:20px; height:20px; padding:0; }
+  .caret-btn{ 
+    width:auto; 
+    height:auto; 
+    padding:2px 0; 
+  }
   .caret-btn svg{ width:12px; height:12px; }
 
   .dropdown-menu{
@@ -621,13 +629,13 @@ p{ margin:0; }
     overflow:hidden; 
     padding:0; 
     margin:0;
-    width:100%;
     transition:max-height .35s cubic-bezier(.65,0,.35,1), padding .3s ease;
     text-align:right;
+    width:100%;
   }
   .nav-item-dropdown.dropdown-open .dropdown-menu{ 
     max-height:220px; 
-    padding:4px 0 8px 0; 
+    padding:6px 0; 
   }
   .nav-item-dropdown.dropdown-open .caret-btn svg{ transform:rotate(180deg); }
   .dropdown-menu a{
@@ -639,7 +647,7 @@ p{ margin:0; }
     letter-spacing:.1em;
     font-family:var(--f-sans); 
     font-style:normal; 
-    color:var(--muted);
+    color:var(--ink);
     text-align:right;
   }
   .dropdown-menu a:not(:last-child){ border-bottom:none; }
