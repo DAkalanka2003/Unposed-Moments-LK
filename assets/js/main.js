@@ -3,19 +3,19 @@
 
   /* ---------------------------------------------------
      Header: stays fixed & visible at all times.
-     Only add a subtle shadow once the page is scrolled.
+     Add border/shadow on scroll.
   --------------------------------------------------- */
   const header = document.getElementById("siteHeader");
   const backTop = document.getElementById("backTop");
 
   window.addEventListener("scroll", () => {
     const y = window.scrollY;
-    header.classList.toggle("is-scrolled", y > 30);
+    header?.classList.toggle("is-scrolled", y > 30);
     if (backTop) backTop.classList.toggle("is-visible", y > 700);
   }, { passive: true });
 
   /* ---------------------------------------------------
-     Mobile nav
+     Mobile nav (Compact Menu)
   --------------------------------------------------- */
   const burger = document.getElementById("burger");
   const nav = document.getElementById("mainNav");
@@ -29,29 +29,36 @@
   }
 
   if (burger && nav) {
-    burger.addEventListener("click", () => {
+    burger.addEventListener("click", (e) => {
+      e.stopPropagation();
       const open = nav.classList.toggle("is-open");
       burger.classList.toggle("is-open", open);
       burger.setAttribute("aria-expanded", open ? "true" : "false");
-      document.body.style.overflow = open ? "hidden" : "";
       if (!open) closeAllDropdowns();
     });
 
+    /* Nav link එකක් click කල විට compact menu එක වැසීම */
     nav.querySelectorAll("a").forEach(link => {
       if (link.matches(".nav-item-dropdown .nav-parent-link")) return;
       link.addEventListener("click", () => {
         nav.classList.remove("is-open");
         burger.classList.remove("is-open");
-        document.body.style.overflow = "";
         closeAllDropdowns();
       });
+    });
+
+    /* Click outside to close compact menu */
+    document.addEventListener("click", (e) => {
+      if (nav.classList.contains("is-open") && !nav.contains(e.target) && !burger.contains(e.target)) {
+        nav.classList.remove("is-open");
+        burger.classList.remove("is-open");
+        closeAllDropdowns();
+      }
     });
   }
 
   /* ---------------------------------------------------
-     Featured Work dropdown (tap to expand on mobile,
-     hover on desktop — this click also lets desktop
-     users toggle it manually via keyboard/tap)
+     Featured Work Submenu Dropdown
   --------------------------------------------------- */
   function toggleDropdown(parent, btn) {
     if (!parent) return;
@@ -71,9 +78,6 @@
     });
   });
 
-  /* On mobile, tapping the "Featured Work" label itself also expands
-     the submenu list below it, instead of jumping straight to the
-     homepage section. On desktop it still navigates normally. */
   document.querySelectorAll(".nav-item-dropdown .nav-parent-link").forEach(link => {
     link.addEventListener("click", (e) => {
       if (window.matchMedia("(max-width:860px)").matches) {
@@ -84,21 +88,8 @@
     });
   });
 
-  document.addEventListener("click", (e) => {
-    document.querySelectorAll(".nav-item-dropdown.dropdown-open").forEach(dd => {
-      if (!dd.contains(e.target)) {
-        dd.classList.remove("dropdown-open");
-        const btn = dd.querySelector(".caret-btn");
-        if (btn) btn.setAttribute("aria-expanded", "false");
-      }
-    });
-  });
-
   /* ---------------------------------------------------
-     Scrollspy — highlights Home / About / Featured Work /
-     Comments / Contact Us as you scroll the homepage.
-     No-ops on category pages (the sections don't exist there),
-     where the server-rendered active state stays as-is.
+     Scrollspy — highlights navigation on scroll
   --------------------------------------------------- */
   function setActiveNav(key) {
     document.querySelectorAll("[data-nav]").forEach(el => el.classList.remove("active"));
@@ -127,7 +118,7 @@
   }
 
   /* ---------------------------------------------------
-     Hero slider (home page only)
+     Hero slider
   --------------------------------------------------- */
   const slides = document.querySelectorAll(".hero-slide");
   const dots = document.querySelectorAll(".hero-dots button");
@@ -135,11 +126,12 @@
   let heroTimer;
 
   function goToSlide(i) {
+    if (!slides.length) return;
     slides[heroIndex].classList.remove("is-active");
-    dots[heroIndex].classList.remove("is-active");
+    dots[heroIndex]?.classList.remove("is-active");
     heroIndex = i;
     slides[heroIndex].classList.add("is-active");
-    dots[heroIndex].classList.add("is-active");
+    dots[heroIndex]?.classList.add("is-active");
   }
 
   function nextSlide() {
@@ -147,7 +139,7 @@
   }
 
   function startHero() {
-    heroTimer = setInterval(nextSlide, 5500);
+    if (slides.length) heroTimer = setInterval(nextSlide, 5500);
   }
 
   dots.forEach((dot, i) => {
@@ -161,7 +153,7 @@
   if (slides.length) startHero();
 
   /* ---------------------------------------------------
-     Reveal on scroll
+     Reveal elements on scroll
   --------------------------------------------------- */
   const revealEls = document.querySelectorAll(".reveal, .reveal-scale");
   const revealObserver = new IntersectionObserver((entries) => {
@@ -176,13 +168,14 @@
   revealEls.forEach(el => revealObserver.observe(el));
 
   /* ---------------------------------------------------
-     Testimonial slider (home page only)
+     Testimonials slider
   --------------------------------------------------- */
   const tSlides = document.querySelectorAll(".t-slide");
   const tProgress = document.getElementById("tProgress");
   let tIndex = 0;
 
   function showTestimonial(i) {
+    if (!tSlides.length) return;
     tSlides[tIndex].classList.remove("is-active");
     tIndex = (i + tSlides.length) % tSlides.length;
     tSlides[tIndex].classList.add("is-active");
